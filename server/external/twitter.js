@@ -21,13 +21,17 @@ module.exports = {
      * @param {Object} res - response data for this response
      */
   getUserInfo: function(req, res) {
-      var twitterHandle = req.body.twitterHandle;
+      var hashTag = req.body.twitterHandle
+      hashTag = hashTag.replace(/#|@| /g, '');
+      var url = 'search/tweets.json?q=%23' + hashTag + '&result_type=recent';
 
       //response is JSON string of arrays. We will parse first result in it, create JSON from it, and send it back to client.
-      client.get('users/lookup', {
-          'screen_name': twitterHandle
-      }, function(error, response) {
+      client.get('search/tweets', {
+          q: '#' + hashTag,
+          result_type: 'recent',
+          count: 100
 
+      }, function(error, tweets, response) {
           var twitterUserData = {};
 
           if (error) {
@@ -35,13 +39,29 @@ module.exports = {
               res.send(404, "Sorry, bad Twitter handle - try again");
           } else {
               console.log("Data successfully retrieved from Twitter API");
-              console.log("response screen name", response[0].screen_name);
-              var returnedUserData =response[0];
-              twitterUserData["screen_name"] = returnedUserData["screen_name"];
-              twitterUserData["name"] = returnedUserData["name"];
-              twitterUserData["follower_count_at_query_time"] = returnedUserData["followers_count"];
-              twitterUserData["price_at_purchase"] = parseInt(returnedUserData["followers_count"]) / 1000000;
+              console.log(tweets)
+
+              twitterUserData['screen_name'] = hashTag;
+              twitterUserData['name'] = hashTag;
+              twitterUserData['follower_count_at_query_time'] = 50
+              twitterUserData['price_at_purchase'] = parseInt(50/1000000)
+
+              twitterUserData.tweets = [];
+              tweets.statuses.forEach(function(tweet){
+                twitterUserData.tweets.push(tweet)
+              });
+
               res.json(twitterUserData);
+
+
+
+              // console.log("response screen name", response[0].screen_name);
+              // var returnedUserData =response[0];
+              // twitterUserData["screen_name"] = returnedUserData["screen_name"];
+              // twitterUserData["name"] = returnedUserData["name"];
+              // twitterUserData["follower_count_at_query_time"] = returnedUserData["followers_count"];
+              // twitterUserData["price_at_purchase"] = parseInt(returnedUserData["followers_count"]) / 1000000;
+              // res.json(twitterUserData);
           }
 
 
