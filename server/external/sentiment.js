@@ -8,7 +8,7 @@ module.exports = {
 	{
 		indico.sentiment(words)
 	  .then(function(res) {
-	  	cb(res);
+	  	cb(res * 2 - 1);
 	  }).catch(function(err) {
 	    console.warn(err);
 	  });
