@@ -36,13 +36,16 @@ angular.module('socialStock.search', [])
   $scope.buyStock = function(shares){
     var date = new Date();
     var purchase = {
-      "screen_name": "@" + $scope.stocks[0].screen_name,
+      "screen_name": $scope.stocks[0].screen_name,
       "name": $scope.stocks[0].name,
       "follower_count_at_purchase": $scope.stocks[0].follower_count_at_query_time,
       "price_at_purchase": $scope.stocks[0].price_at_purchase,
       "date_of_purchase": date.toString(),
-      "shares": +shares
+      "shares": +shares,
+      "sentiment" : $scope.stocks[0].sentiment
     };
+
+    console.log($scope.stocks[0].sentiment);
     clientFactory.buyStock(purchase).then(function(data){
       console.log("Data received from portfolio controller to search.js: ", data)
         if(data.data === "Overdraft! You cannot buy this stock!") {

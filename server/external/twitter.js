@@ -46,17 +46,19 @@ module.exports = {
               twitterUserData['price_at_purchase'] = parseInt(50/1000000);
 
               twitterUserData.tweets = [];
+              var sentimentSum = 0;
               async.each(tweets.statuses, function(tweet, next){
                sentiment.getSentiment(tweet.text, function(val)
                 {
-                  tweet.sentiment = val;
-                  console.log(tweet.text, val);
+                  sentimentSum += val;
                   twitterUserData.tweets.push(tweet);
                   next();
                 })
               },
                function(err) {
-
+                var averageSentiment = sentimentSum/tweets.statuses.length;
+                twitterUserData['sentiment'] = averageSentiment;
+                console.log("Average sentiment Value", averageSentiment);
                 res.json(twitterUserData);
                });
 
@@ -85,21 +87,21 @@ module.exports = {
    * @param {Function} callback - function to execute on results of query
    */
   getUserInfoHelper: function(twitterHandles, callback){
-    client.get('users/lookup', {
-        'screen_name': twitterHandles
-    }, function(error, response) {
+    client.get('search/tweets', {
+          q: twitterHandles,
+          result_type: 'recent',
+          count: 100
 
-
+      }, function(error, tweets, response) {
         if (error) {
           console.log("Error getting data from Twitter API");
-          res.send(404, "Sorry, bad Twitter handle - try again");
         } else {
           console.log("Data successfully retrieved from Twitter API");
 
           var followersCount = [];
-
+          console.log(tweets);
           for(var i = 0; i < response.length; i++){
-            followersCount.push(response[i].followers_count);
+            followersCount.push(response[i].length);
 
           }
           callback(followersCount);

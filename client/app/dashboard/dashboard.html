@@ -24,7 +24,7 @@
         <div class='gray right fifteenpercent'>{{ stock.current_price * stock.shares | number: 2}}</div>
         <div class='green right fifteenpercent' ng-class="{ red: (stock.current_price - (stock.follower_count_at_purchase/1000000)) * stock.shares < 0 }">{{ (stock.current_price - (stock.follower_count_at_purchase/1000000)) * stock.shares |number:2}}</div>
         <div class='gray center tenpercent'>
-          <button class='sell' ng-click="createAndSell(stock.screen_name, stock.name, stock.current_follower_count, stock.current_date, stock.current_price, stock.shares)">SELL</button>
+          <button class='sell' ng-click="createAndSell(stock.screen_name, stock.name, stock.current_follower_count, stock.current_date, stock.current_price, stock.shares, stock.sentiment)">SELL</button>
         </div>
       </div>
     </div>

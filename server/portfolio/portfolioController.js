@@ -145,6 +145,7 @@ module.exports = {
           if(!overDraft){
             portfolio.cash_balance = portfolio.cash_balance - (req.body.shares * req.body.price_at_purchase);
             portfolio.stocks.push(req.body);
+            console.log("Add Stock", req.body.sentiment);
 
             // To fix: temporary attributes are not attaching to the portfolio being sent
             portfolio['user_twitter_handle'] = req.session.passport.user.screen_name;
