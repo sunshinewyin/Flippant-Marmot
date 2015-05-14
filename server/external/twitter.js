@@ -1,7 +1,8 @@
 var Twitter = require("twitter");
 var fs = require("fs");
 var bodyParser = require("body-parser");
-
+var sentiment = require("./sentiment.js");
+var async = require("async");
 
 //API credentials for our app
 var credentials = fs.readFileSync('./server/external/twitterAPIcredentials.txt', 'utf8').split(" ");
@@ -22,12 +23,10 @@ module.exports = {
      */
   getUserInfo: function(req, res) {
       var hashTag = req.body.twitterHandle
-      hashTag = hashTag.replace(/#|@| /g, '');
-      var url = 'search/tweets.json?q=%23' + hashTag + '&result_type=recent';
 
       //response is JSON string of arrays. We will parse first result in it, create JSON from it, and send it back to client.
       client.get('search/tweets', {
-          q: '#' + hashTag,
+          q: hashTag,
           result_type: 'recent',
           count: 100
 
@@ -43,15 +42,24 @@ module.exports = {
 
               twitterUserData['screen_name'] = hashTag;
               twitterUserData['name'] = hashTag;
-              twitterUserData['follower_count_at_query_time'] = 50
-              twitterUserData['price_at_purchase'] = parseInt(50/1000000)
+              twitterUserData['follower_count_at_query_time'] = 50;
+              twitterUserData['price_at_purchase'] = parseInt(50/1000000);
 
               twitterUserData.tweets = [];
-              tweets.statuses.forEach(function(tweet){
-                twitterUserData.tweets.push(tweet)
-              });
+              async.each(tweets.statuses, function(tweet, next){
+               sentiment.getSentiment(tweet.text, function(val)
+                {
+                  tweet.sentiment = val;
+                  console.log(tweet.text, val);
+                  twitterUserData.tweets.push(tweet);
+                  next();
+                })
+              },
+               function(err) {
 
-              res.json(twitterUserData);
+                res.json(twitterUserData);
+               });
+
 
 
 
