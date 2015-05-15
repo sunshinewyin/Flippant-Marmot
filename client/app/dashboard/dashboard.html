@@ -1,36 +1,67 @@
-<div id='info'>
-  <div class='networth'>NET WORTH <span class='rightfloat'>{{ networth | number:2 }}</span></div>
-  <div id='cash'>CASH BALANCE <span class='rightfloat' ng-class="{ red: portfolio.cash_balance < 0 }">{{portfolio.cash_balance | number:2}}</span></div>
-</div>
-  <div id='dashheaders'>
-    <div class='eighteenpercent'>STOCK NAME</div>
-    <div class='right ninepercent'>SHARES</div>
-    <div class='right ninepercent'>PRICE</div>
-    <div class='right ninepercent'>TOTAL</div>
-    <div class='right ninepercent'>CHANGE</div>
-    <div class='right sixpercent'>SELL</div>
-    <div class='center fourtypercent'>ASSET ALLOCATION</div>
-  </div>
-<div id='stockdata'>
-  <div id='stocks'>
-    <div ng-repeat='stock in portfolio.stocks'>
-      <div class='stock parent left'>
-        <div class='gray thirtypercent'>
-          <div>{{ stock.name }}</div>
-          <div class='handle'>{{ stock.screen_name }}</div>
-        </div>
-        <div class='gray right fifteenpercent'>{{ stock.shares | number}}</div>
-        <div class='gray right fifteenpercent'>{{ stock.current_price | number:2 }}</div>
-        <div class='gray right fifteenpercent'>{{ stock.current_price * stock.shares | number: 2}}</div>
-        <div class='green right fifteenpercent' ng-class="{ red: (stock.current_price - (stock.follower_count_at_purchase/1000000)) * stock.shares < 0 }">{{ (stock.current_price - (stock.follower_count_at_purchase/1000000)) * stock.shares |number:2}}</div>
-        <div class='gray center tenpercent'>
-          <button class='sell' ng-click="createAndSell(stock.screen_name, stock.name, stock.current_follower_count, stock.current_date, stock.current_price, stock.shares)">SELL</button>
-        </div>
-      </div>
-    </div>
+<div class ="row">
+  <div class="row stats_overview">
+         <div id="line-chart-widget" class="panel">
+            <div class="panel-body">
+                <div class="media col-md-4 col-md-offset-4">
+                    <div class="list-block">
+                      <ul class="text-center legend">
+                         <li>
+                            <h3>{{ networth | number:2 }}</h3>
+                            NET WORTH
+                         </li>
+                         <li>
+                            <h3>{{portfolio.cash_balance | number:2}}</h3>
+                            CASH BALANCE
+                         </li>
+                      </ul>
+                   </div>
+               </div>
+            </div>
+            <br/>
+         </div>
   </div>
 </div>
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.4/d3.min.js"></script>
-<script src="lib/d3pie.min.js"></script>
-<div id="pieChart"></div>
-<script src="app/dashboard/piechart.js"></script>
+
+<div class="container-fluid">
+<div class="row">
+
+  <div class="col-md-3" ng-repeat='stock in portfolio.stocks'>
+         <div id="pie-chart-widget" class="panel">
+            <div class="panel-heading text-center">
+               <h5 class="text-uppercase"><strong>{{ stock.screen_name }}</strong></h5>
+            </div>
+            <div class="panel-body">
+              <!-- replcae with line chart -->
+              <canvas id="line" class="chart chart-line chart-xl" data="line.data" labels="line.labels" legend="true" series="line.series"></canvas>
+            </div>
+            <div class="panel-footer">
+               <div class="list-block">
+                  <ul class="text-center legend">
+                     <li class="video" style="margin-right: 1px;">
+                        CURRENT PRICE 
+                        <h2>{{ stock.current_price * stock.shares | number: 2}}</h2>
+                     </li>
+                     <li class="photo">
+                        SHARES 
+                        <h2>{{stock.shares}}</h2>
+                     </li>
+                     <li class="audio" style="margin-left: 1px;">
+                        CHANGE 
+                        <h2>{{(stock.current_price - (stock.follower_count_at_purchase/1000000)) * stock.shares |number:2}}</h2>
+                     </li>
+                     <li class="audio" style="margin-left: 1px;">
+                        TOTAL 
+                        <h2>{{ stock.current_price * stock.shares | number: 2}}</h2>
+                     </li>
+                  </ul>
+               </div>
+               <div class="btn-group btn-group-justified text-uppercase text-center">
+                  <a class="btn btn-default" role="button"><i class="fa fa-share-alt fa-2x"></i><br><small>Purchase more</small></a>
+                  <a class="btn btn-default" role="button"><i class="fa fa-history fa-2x"></i><br><small>Sell</small></a>
+               </div>
+            </div>
+         </div>
+   </div>
+</div>
+</div>
+

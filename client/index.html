@@ -7,29 +7,46 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
   <link rel="stylesheet" type="text/css" href="styles/style.css">
+
 </head>
 <body>
-  <div id='nav'>
-    <div id='logo'>SOCIAL<span class='thick'>CAPITAL</span>
-    <ul id='menu'>
-      <li><a href='#/dashboard'>Dash</a></li>
-      <li><a href='#/search'>Search</a></li>
-      <li><a href='/logout'>Logout</a></li>
-    </ul>
-    </div>
-  </div>
 
-  <div ng-view> </div>
+  <div ui-view></div>
 
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.14/angular-ui-router.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+ <script src="./lib/angular-chart.js"></script>
+
 
   <script src="app/Factories/clientFactory.js"></script>
   <script src="app/auth/auth.js"></script>
   <script src="app/dashboard/dashboard.js"></script>
   <script src="app/search/search.js"></script>
   <script src="app/app.js"></script>
+  <script src="app/directives/headerDirective.js"></script>
+  <script src="app/directives/chartWidgetDirective.js"></script>
+  <script src="app/dashboard/chartController.js"></script>
+
+
+
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+  
+  <!-- Docs at http://simpleweatherjs.com -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery.simpleWeather/3.0.2/jquery.simpleWeather.min.js"></script>
+  <!-- Docs at http://www.chartjs.org -->
+  <script src="http://www.chartjs.org/assets/Chart.min.js"></script>
+
+
+
 </body>
 </html>

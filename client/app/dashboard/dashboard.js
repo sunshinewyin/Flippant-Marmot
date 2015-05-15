@@ -4,6 +4,14 @@ angular.module('socialStock.dash', [])
   console.log("inside DashController!")
 
 
+    $scope.line = {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      data: [
+        [65, 59, 80, 81, 56, 55, 40] ]
+    }
+
+
+
   $scope.portfolio;
   $scope.networth;
 
@@ -113,4 +121,31 @@ angular.module('socialStock.dash', [])
 
   $scope.refresh();
 
-});
+}).directive('chartwidegt',function(){
+  console.log("**********************");
+ 
+    return {
+          templateUrl:'app/directives/chartWidget.html',
+          restrict: 'E',
+          replace: true,
+          scope: {
+            'model': '=',
+            'dataObj': '@',
+          }
+      }
+  }) .controller('chartController', function($scope, $http, clientFactory) {
+        console.log("inside DashController!");
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
