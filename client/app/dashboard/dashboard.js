@@ -107,7 +107,7 @@ angular.module('socialStock.dash', [])
       "current_date": cd,
       "current_price": cp,
       "shares": s,
-      "sentiment" : sentiment, 
+      "sentiment" : sentiment,
     }
 
     clientFactory.sellStock(stockToSell).then(function(data) {
@@ -124,7 +124,7 @@ angular.module('socialStock.dash', [])
 
 }).directive('chartwidegt',function(){
   console.log("**********************");
- 
+
     return {
           templateUrl:'app/directives/chartWidget.html',
           restrict: 'E',

@@ -7,13 +7,34 @@ angular.module('socialStock.search', [])
   $scope.portfolio;
   $scope.networth;
 
+
+
   /** search function to get follower data and current price of stock
   * @param {string} handle - The twitter handle searching
   */
   $scope.search = function(handle){
     clientFactory.getTwitterInfo(handle).then(function(data){
       $scope.stocks = [data.data];
-      console.log($scope.stocks);
+      console.log($scope.stocks[0].tweets);
+
+      var tweetsArray = $scope.stocks[0].tweets;
+      var sentimentArray = tweetsArray.map(function(tweet){
+        return (tweet.sentiment+1)/2;
+      });
+      var xArray = tweetsArray.map(function(tweet, index){
+        return index;
+      });
+
+
+
+  $scope.line = {
+      labels: xArray,
+      data: [
+        sentimentArray ],
+      options: {
+        datasetFill: false
+      }
+    }
       $scope.searchTerm = '';
     });
   };
@@ -54,7 +75,7 @@ angular.module('socialStock.search', [])
         if(data.data === "In this version, you cannot buy the same stock twice. Try again.") {
           alert("In this version, you cannot buy the same stock twice. Try again.");
         }
-        
+
         $location.path('/dashboard');
     });
   }

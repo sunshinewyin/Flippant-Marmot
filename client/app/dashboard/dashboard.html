@@ -32,25 +32,29 @@
             </div>
             <div class="panel-body">
               <!-- replcae with line chart -->
-              <canvas id="line" class="chart chart-line chart-xl" data="line.data" labels="line.labels" legend="true" series="line.series"></canvas>
+              <!-- <canvas id="line" class="chart chart-line chart-xl" data="line.data" labels="line.labels" legend="true" series="line.series"></canvas> -->
+
+              <canvas id="bar" class="chart chart-bar" data="line.data"
+              labels="line.labels"></canvas>
+
             </div>
             <div class="panel-footer">
                <div class="list-block">
                   <ul class="text-center legend">
                      <li class="video" style="margin-right: 1px;">
-                        CURRENT PRICE 
+                        CURRENT PRICE
                         <h2>{{ stock.current_price * stock.shares | number: 2}}</h2>
                      </li>
                      <li class="photo">
-                        SHARES 
+                        SHARES
                         <h2>{{stock.shares}}</h2>
                      </li>
                      <li class="audio" style="margin-left: 1px;">
-                        CHANGE 
+                        CHANGE
                         <h2>{{(stock.current_price - (stock.follower_count_at_purchase/1000000)) * stock.shares |number:2}}</h2>
                      </li>
                      <li class="audio" style="margin-left: 1px;">
-                        TOTAL 
+                        TOTAL
                         <h2>{{ stock.current_price * stock.shares | number: 2}}</h2>
                      </li>
                   </ul>

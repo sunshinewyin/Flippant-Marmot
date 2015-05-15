@@ -6,6 +6,7 @@
   <form ng-submit='search(searchTerm)'>
     <!-- <button ng-click='search(searchTerm)'>search</button> -->
     <input type='text' ng-model='searchTerm' placeholder='Input Twitter Handle'>
+
   </form>
 </div>
 <div id='searchheaders'>
@@ -27,6 +28,9 @@
         <!-- <button ng-click='buyStock(shareCount)'>BUY</button> -->
         <input type='text' ng-model='shareCount' placeholder='shares'>
       </form>
+
+          <canvas id="bar" class="chart chart-bar" data="line.data"
+              labels="line.labels"></canvas>
     </div>
   </div>
 </div>
