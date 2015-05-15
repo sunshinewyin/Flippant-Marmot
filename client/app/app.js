@@ -1,29 +1,36 @@
 angular.module('socialStock', [
+  'socialStock.header',
   'socialStock.auth',
   'socialStock.dash',
   'socialStock.search',
   'socialStock.factory',
-  'ngRoute'
+  'ui.router',
+  'chart.js',
+  'socialStock.charts'
 ])
-.config(function($routeProvider, $httpProvider) {
-  $routeProvider
-    .when('/dashboard', {
-      templateUrl: 'app/dashboard/dashboard.html',
-      controller: 'DashController'
+.config(function($stateProvider,$urlRouterProvider, $httpProvider) {
+  
+  $urlRouterProvider.otherwise('/master/dashboard');
+  
+  $stateProvider
+    .state('master', {
+      url:'/master',
+      templateUrl: 'app/views/master.html',
+      }).state('master.home',{
+        url:'/dashboard',
+        controller: 'DashController',
+        templateUrl:'app/dashboard/dashboard.html',
+    }).state('master.search', {
+        url:'/search',
+        templateUrl:'app/search/search.html',
+        controller: 'SearchController'
+    }).state('master.logout', {
+        url:'/logout',
+        templateUrl:'app/search/search.html',
+        controller: 'DashController'
+    }).state('chart', {
+      url: '/chats', 
+      templateUrl: '/app/chart/charts.html',
+      controller: 'chartsController'
     })
-    .when('/search', {
-      templateUrl: 'app/search/search.html',
-      controller: 'SearchController'
-    })
-    .when('/logout', {
-      templateUrl: 'app/auth/auth.html',
-      controller: 'AuthController'
-    })
-    .otherwise({
-      redirectTo: '/dashboard'
-    });
-
-    // We add our $httpInterceptor into the array
-    // of interceptors. Think of it like middleware for your ajax calls
-    // $httpProvider.interceptors.push('AttachTokens');
 })
