@@ -98,7 +98,7 @@ angular.module('socialStock.dash', [])
    *  @param {Number} cp - current price of stock to sell
    *  @param {Number} s - number of stocks to sell
    */
-  $scope.createAndSell = function(sn, name, cfc, cd, cp, s) {
+  $scope.createAndSell = function(sn, name, cfc, cd, cp, s, sentiment) {
 
     var stockToSell = {
       "screen_name": sn,
@@ -106,7 +106,8 @@ angular.module('socialStock.dash', [])
       "current_follower_count": cfc,
       "current_date": cd,
       "current_price": cp,
-      "shares": s
+      "shares": s,
+      "sentiment" : sentiment, 
     }
 
     clientFactory.sellStock(stockToSell).then(function(data) {

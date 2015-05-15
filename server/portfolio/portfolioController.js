@@ -145,6 +145,7 @@ module.exports = {
           if(!overDraft){
             portfolio.cash_balance = portfolio.cash_balance - (req.body.shares * req.body.price_at_purchase);
             portfolio.stocks.push(req.body);
+            console.log("Add Stock", req.body.sentiment);
 
             // To fix: temporary attributes are not attaching to the portfolio being sent
             portfolio['user_twitter_handle'] = req.session.passport.user.screen_name;
@@ -152,7 +153,7 @@ module.exports = {
 
             portfolio.save(function(err){
               if(err){
-                console.log('Error!');
+                console.log('Error!', err);
               }
             });
 
@@ -197,7 +198,8 @@ module.exports = {
 
     findPortfolio({user_id: userObj._id})
       .then(function(portfolio){
-        portfolio.cash_balance = portfolio.cash_balance + (req.body.shares * req.body.current_price);
+        if(req.body.shares && req.body.current_price)
+          portfolio.cash_balance = portfolio.cash_balance + (req.body.shares * req.body.current_price);
 
         for(var i = portfolio.stocks.length - 1; i >= 0; i--){
           if(portfolio.stocks[i].screen_name === req.body.screen_name){
@@ -220,7 +222,7 @@ module.exports = {
 
         portfolio.save(function(err){
           if(err){
-            console.log('Error!');
+            console.log('Error!', err);
           }
         res.json(portfolio);
         });

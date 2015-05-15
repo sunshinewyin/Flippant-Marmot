@@ -1,7 +1,8 @@
 var Twitter = require("twitter");
 var fs = require("fs");
 var bodyParser = require("body-parser");
-
+var sentiment = require("./sentiment.js");
+var async = require("async");
 
 //API credentials for our app
 var credentials = fs.readFileSync('./server/external/twitterAPIcredentials.txt', 'utf8').split(" ");
@@ -21,13 +22,15 @@ module.exports = {
      * @param {Object} res - response data for this response
      */
   getUserInfo: function(req, res) {
-      var twitterHandle = req.body.twitterHandle;
+      var hashTag = req.body.twitterHandle
 
       //response is JSON string of arrays. We will parse first result in it, create JSON from it, and send it back to client.
-      client.get('users/lookup', {
-          'screen_name': twitterHandle
-      }, function(error, response) {
+      client.get('search/tweets', {
+          q: hashTag,
+          result_type: 'recent',
+          count: 100
 
+      }, function(error, tweets, response) {
           var twitterUserData = {};
 
           if (error) {
@@ -35,13 +38,40 @@ module.exports = {
               res.send(404, "Sorry, bad Twitter handle - try again");
           } else {
               console.log("Data successfully retrieved from Twitter API");
-              console.log("response screen name", response[0].screen_name);
-              var returnedUserData =response[0];
-              twitterUserData["screen_name"] = returnedUserData["screen_name"];
-              twitterUserData["name"] = returnedUserData["name"];
-              twitterUserData["follower_count_at_query_time"] = returnedUserData["followers_count"];
-              twitterUserData["price_at_purchase"] = parseInt(returnedUserData["followers_count"]) / 1000000;
-              res.json(twitterUserData);
+              console.log(tweets)
+
+              twitterUserData['screen_name'] = hashTag;
+              twitterUserData['name'] = hashTag;
+              twitterUserData['follower_count_at_query_time'] = 50;
+              twitterUserData['price_at_purchase'] = parseInt(50/1000000);
+
+              twitterUserData.tweets = [];
+              var sentimentSum = 0;
+              async.each(tweets.statuses, function(tweet, next){
+               sentiment.getSentiment(tweet.text, function(val)
+                {
+                  sentimentSum += val;
+                  twitterUserData.tweets.push(tweet);
+                  next();
+                })
+              },
+               function(err) {
+                var averageSentiment = sentimentSum/tweets.statuses.length;
+                twitterUserData['sentiment'] = averageSentiment;
+                console.log("Average sentiment Value", averageSentiment);
+                res.json(twitterUserData);
+               });
+
+
+
+
+              // console.log("response screen name", response[0].screen_name);
+              // var returnedUserData =response[0];
+              // twitterUserData["screen_name"] = returnedUserData["screen_name"];
+              // twitterUserData["name"] = returnedUserData["name"];
+              // twitterUserData["follower_count_at_query_time"] = returnedUserData["followers_count"];
+              // twitterUserData["price_at_purchase"] = parseInt(returnedUserData["followers_count"]) / 1000000;
+              // res.json(twitterUserData);
           }
 
 
@@ -57,21 +87,21 @@ module.exports = {
    * @param {Function} callback - function to execute on results of query
    */
   getUserInfoHelper: function(twitterHandles, callback){
-    client.get('users/lookup', {
-        'screen_name': twitterHandles
-    }, function(error, response) {
+    client.get('search/tweets', {
+          q: twitterHandles,
+          result_type: 'recent',
+          count: 100
 
-
+      }, function(error, tweets, response) {
         if (error) {
           console.log("Error getting data from Twitter API");
-          res.send(404, "Sorry, bad Twitter handle - try again");
         } else {
           console.log("Data successfully retrieved from Twitter API");
 
           var followersCount = [];
-
+          console.log(tweets);
           for(var i = 0; i < response.length; i++){
-            followersCount.push(response[i].followers_count);
+            followersCount.push(response[i].length);
 
           }
           callback(followersCount);

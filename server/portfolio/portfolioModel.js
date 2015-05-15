@@ -12,7 +12,8 @@ var PortfolioSchema = new Schema({
   current_follower_count: Number,
   current_price: Number,
   name: String,
-  screen_name: String}]
+  screen_name: String,
+	sentiment: Number}]
 });
 
 var Portfolio = mongoose.model('Portfolio', PortfolioSchema);
