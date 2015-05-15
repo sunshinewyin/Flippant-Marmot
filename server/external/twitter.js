@@ -38,7 +38,6 @@ module.exports = {
               res.send(404, "Sorry, bad Twitter handle - try again");
           } else {
               console.log("Data successfully retrieved from Twitter API");
-              console.log(tweets)
 
               twitterUserData['screen_name'] = hashTag;
               twitterUserData['name'] = hashTag;
@@ -96,13 +95,13 @@ module.exports = {
         if (error) {
           console.log("Error getting data from Twitter API");
         } else {
+          console.log("#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{}}}}}}}}}}}}}}}}}}}}}}}}}}}")
           console.log("Data successfully retrieved from Twitter API");
 
           var followersCount = [];
           console.log(tweets);
           for(var i = 0; i < response.length; i++){
             followersCount.push(response[i].length);
-
           }
           callback(followersCount);
 
