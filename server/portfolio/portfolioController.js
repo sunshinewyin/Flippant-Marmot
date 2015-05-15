@@ -153,7 +153,7 @@ module.exports = {
 
             portfolio.save(function(err){
               if(err){
-                console.log('Error!');
+                console.log('Error!', err);
               }
             });
 
@@ -198,7 +198,8 @@ module.exports = {
 
     findPortfolio({user_id: userObj._id})
       .then(function(portfolio){
-        portfolio.cash_balance = portfolio.cash_balance + (req.body.shares * req.body.current_price);
+        if(req.body.shares && req.body.current_price)
+          portfolio.cash_balance = portfolio.cash_balance + (req.body.shares * req.body.current_price);
 
         for(var i = portfolio.stocks.length - 1; i >= 0; i--){
           if(portfolio.stocks[i].screen_name === req.body.screen_name){
@@ -221,7 +222,7 @@ module.exports = {
 
         portfolio.save(function(err){
           if(err){
-            console.log('Error!');
+            console.log('Error!', err);
           }
         res.json(portfolio);
         });
