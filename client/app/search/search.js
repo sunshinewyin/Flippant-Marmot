@@ -2,39 +2,77 @@ angular.module('socialStock.search', [])
 
 
 /** This is a controller to dictate search functions with the use of the helper functions in the clientFactory */
-.controller('SearchController', function ($scope, $location, clientFactory) {
+.controller('SearchController', function ($rootScope, $scope, $location, clientFactory) {
 
   $scope.portfolio;
   $scope.networth;
 
 
+ // $scope.search = function(handle){
 
+ //      $rootScope.line = {
+ //          bucket: [0.14, 0.28, 0.42, 0.56, 0.70, 0.84, 1],
+ //          labels: ["-3", "-2", "-1", "0", "1", "2", "3"],
+ //          data: [0,0,0,0,0,0,0 ]
+ //        };
+ //    clientFactory.getTwitterInfo(handle).then(function(data){
+
+
+
+ //      $scope.stocks = [data.data];
+ //      console.log($scope.stocks[0].tweets);
+
+ //      var tweetsArray = $scope.stocks[0].tweets;
+ //      var sentimentArray = tweetsArray.forEach(function(tweet){
+ //        for(var i = 0; i< $rootScope.line.bucket.length; i++) {
+ //          if((tweet.sentiment+1)/2 <$rootScope.line.bucket[i] ) {
+ //            $rootScope.line.bucket[i]++;
+ //            break;
+ //          }
+ //        }
+ //      });
+ //      var xArray = tweetsArray.map(function(tweet, index){
+ //        return index;
+ //      });
+
+
+
+
+ //      $scope.searchTerm = '';
+ //    });
+ //  };
   /** search function to get follower data and current price of stock
   * @param {string} handle - The twitter handle searching
   */
+
+
+  $rootScope.line = {
+          bucket: [0.14, 0.28, 0.42, 0.56, 0.70, 0.84, 1],
+          labels: ["-3", "-2", "-1", "0", "1", "2", "3"],
+          data: [[0,0,0,0,0,0,0 ]]
+    }
   $scope.search = function(handle){
     clientFactory.getTwitterInfo(handle).then(function(data){
+
       $scope.stocks = [data.data];
       console.log($scope.stocks[0].tweets);
 
+  $rootScope.line.data[0] = [0,0,0,0,0,0,0 ];
+
       var tweetsArray = $scope.stocks[0].tweets;
-      var sentimentArray = tweetsArray.map(function(tweet){
-        return (tweet.sentiment+1)/2;
+      var sentimentArray = tweetsArray.forEach(function(tweet){
+        for(var i = 0; i< $rootScope.line.bucket.length; i++) {
+          if((tweet.sentiment+1)/2 <$rootScope.line.bucket[i] ) {
+            $rootScope.line.data[0][i]++;
+            break;
+          }
+        }
       });
       var xArray = tweetsArray.map(function(tweet, index){
         return index;
       });
 
 
-
-  $scope.line = {
-      labels: xArray,
-      data: [
-        sentimentArray ],
-      options: {
-        datasetFill: false
-      }
-    }
       $scope.searchTerm = '';
     });
   };
