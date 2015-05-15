@@ -50,6 +50,7 @@ module.exports = {
                sentiment.getSentiment(tweet.text, function(val)
                 {
                   sentimentSum += val;
+                  tweet.sentiment = val;
                   twitterUserData.tweets.push(tweet);
                   next();
                 })
