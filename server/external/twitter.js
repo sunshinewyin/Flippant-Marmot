@@ -41,8 +41,8 @@ module.exports = {
 
               twitterUserData['screen_name'] = hashTag;
               twitterUserData['name'] = hashTag;
-              twitterUserData['follower_count_at_query_time'] = 50;
-              twitterUserData['price_at_purchase'] = parseInt(50/1000000);
+              twitterUserData['follower_count_at_query_time'] = tweets.statuses.length;
+              
 
               twitterUserData.tweets = [];
               var sentimentSum = 0;
@@ -58,6 +58,7 @@ module.exports = {
                 var averageSentiment = sentimentSum/tweets.statuses.length;
                 twitterUserData['sentiment'] = averageSentiment;
                 console.log("Average sentiment Value", averageSentiment);
+                twitterUserData['price_at_purchase'] = tweets.statuses.length * averageSentiment;
                 res.json(twitterUserData);
                });
 
