@@ -1,6 +1,6 @@
 angular.module('socialStock.dash', [])
 
-.controller('DashController', function($scope, $http, clientFactory) {
+.controller('DashController', function($rootScope, $scope, $http, clientFactory) {
   console.log("inside DashController!")
 
 

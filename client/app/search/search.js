@@ -1,4 +1,4 @@
-angular.module('socialStock.search', [])
+angular.module('socialStock.search', ['n3-line-chart'])
 
 
 /** This is a controller to dictate search functions with the use of the helper functions in the clientFactory */
@@ -6,6 +6,9 @@ angular.module('socialStock.search', [])
 
   $scope.portfolio;
   $scope.networth;
+
+
+
 
 
  // $scope.search = function(handle){
@@ -71,16 +74,54 @@ angular.module('socialStock.search', [])
         for(var i = 0; i< $rootScope.line.bucket.length; i++) {
           if((tweet.sentiment+1)/2 <$rootScope.line.bucket[i] ) {
             $rootScope.line.data[0][i]++;
-             $rootScope.line.data[1][i] += tweet.retweet_count * (100/ totalRetweets);
+             $rootScope.line.data[1][i] += tweet.retweet_count;
             break;
           }
         }
       });
 
+       for(var i = 0; i< 7; i++) {
+          $rootScope.line.data[1][i] =  $rootScope.line.data[1][i]/ $rootScope.line.data[0][i];
+      }
+      var finalResults = [];
+      for(var i = 0; i< 7; i++) {
+        finalResults.push( {x: $rootScope.line.labels[i],
+                            value:  $rootScope.line.data[0][i],
+                            otherValue: $rootScope.line.data[1][i]});
 
-      var xArray = tweetsArray.map(function(tweet, index){
-        return index;
-      });
+      }
+
+
+      console.log(finalResults);
+
+      var maxTweets = $rootScope.line.data[0].sort(function(a,b){
+        return a-b;
+      })[6];
+
+
+
+        $scope.data = finalResults;
+
+        $scope.options = {
+        axes: {
+          x: {key: 'x', labelFunction: function(value) {return value;}, type: 'linear', min: -3, max: 3, ticks: 1},
+          y: {type: 'linear', min: 0, max: maxTweets, ticks: 2},
+          y2: {type: 'linear', min: 0, max: totalRetweets/maxTweets, ticks: 2}
+        },
+        series: [
+          {y: 'value', type: "column", color: 'orange', label: '# of Retweets'},
+          {y: 'otherValue', type: "line",  axis: 'y2', color: 'black', visible: true, drawDots: true, dotSize: 2}
+        ],
+
+        tension: 0.2,
+        tooltip: {mode: 'scrubber', formatter: function(x, y, series) {return '# of Retweets';}},
+        drawLegend: true,
+        drawDots: true,
+        columnsHGap: 0
+      }
+
+
+
 
 
       $scope.searchTerm = '';
