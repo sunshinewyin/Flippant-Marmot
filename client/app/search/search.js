@@ -49,7 +49,7 @@ angular.module('socialStock.search', [])
   $rootScope.line = {
           bucket: [0.14, 0.28, 0.42, 0.56, 0.70, 0.84, 1],
           labels: ["-3", "-2", "-1", "0", "1", "2", "3"],
-          data: [[0,0,0,0,0,0,0 ]]
+          data: [[0,0,0,0,0,0,0 ], [0,0,0,0,0,0,0 ]]
     }
   $scope.search = function(handle){
     clientFactory.getTwitterInfo(handle).then(function(data){
@@ -58,16 +58,26 @@ angular.module('socialStock.search', [])
       console.log($scope.stocks[0].tweets);
 
   $rootScope.line.data[0] = [0,0,0,0,0,0,0 ];
+    $rootScope.line.data[1] = [0,0,0,0,0,0,0 ];
+
 
       var tweetsArray = $scope.stocks[0].tweets;
+      var totalRetweets = 0;
+      tweetsArray.forEach(function(tweet){
+        totalRetweets += tweet.retweet_count;
+      });
+
       var sentimentArray = tweetsArray.forEach(function(tweet){
         for(var i = 0; i< $rootScope.line.bucket.length; i++) {
           if((tweet.sentiment+1)/2 <$rootScope.line.bucket[i] ) {
             $rootScope.line.data[0][i]++;
+             $rootScope.line.data[1][i] += tweet.retweet_count * (100/ totalRetweets);
             break;
           }
         }
       });
+
+
       var xArray = tweetsArray.map(function(tweet, index){
         return index;
       });
